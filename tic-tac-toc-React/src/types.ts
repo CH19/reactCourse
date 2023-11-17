@@ -4,4 +4,7 @@ export interface Square{
     index?: number,
     updatedBoard?(): VoidFunction,
 }
+export interface clearGame{
+    message: string;
+}
 export type turns = 'X' | 'O';

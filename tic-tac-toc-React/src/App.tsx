@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Square,turns } from './types';
+import { Square,clearGame,turns } from './types';
 import './App.css'
 
 function App() {
@@ -24,6 +24,9 @@ function App() {
   const turnos = {
     X: 'X',
     O: 'O'
+  };
+  const empateCheck = (newBoard: any[]) => {
+    return newBoard.every(square => square != '');
   }
   const searchWinner = (boardTrack: any[])=> {
     // buscar ganador en el algortimo de todas las combinaciones posibles 
@@ -49,10 +52,13 @@ function App() {
     newBoard[index] = newTurn
     setBoard(newBoard); 
     const newWinner = searchWinner(newBoard)
-    if(newWinner) setWinner(()=>{
-      alert('Ganaste');
+    if(newWinner){ setWinner(()=>{
       return newWinner
-    });
+    }
+    );
+  }else if(empateCheck(newBoard)){
+    setWinner(false);
+  }
   }
 
   // Componentes 
@@ -75,7 +81,8 @@ function App() {
       </>
     )
   }
-  const ClearGame = ()=>{
+  const ClearGame = (mensaje: clearGame)=>{
+    const {message} = mensaje;
     const clicekd = ()=>{
       const newBoard = [...board];
       setBoard(newBoard.fill(''));
@@ -83,7 +90,7 @@ function App() {
     }
     return (
       <>
-        <button onClick={clicekd}>Clear Game</button>
+        <button onClick={clicekd}>{message}</button>
       </>
     )
   }
@@ -111,8 +118,30 @@ function App() {
     <Square isSelected={!turn}>
       {turnos.O}
     </Square>
-    <ClearGame />
+    <ClearGame message='Iniciar Juego' />
     </section>
+    {
+      winner == true && (
+        <section className='winner'>
+          <div className="text">
+            <h2>
+              {
+                !winner
+                ? 'Empate'
+                : 'Ganó'
+              }
+            </h2>
+            <header className="win">
+              {winner && <Square>{!turn ? turnos.X : turnos.O}</Square>}
+            </header>
+
+            <footer>
+              <ClearGame message='Empezar de Nuevo' />
+            </footer>
+          </div>
+        </section>
+      )
+    }
     </main>
     </>
   )
