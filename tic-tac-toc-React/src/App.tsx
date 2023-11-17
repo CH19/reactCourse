@@ -8,24 +8,61 @@ function App() {
   const [board, setBoard] = useState(Array(9).fill(''));
   // una variable booleana que decidira el turno actual 
   const [turn, setTurn] = useState(false);
+  // variable para decidir el ganador 
+  const [winner, setWinner] = useState(false);
+  // algoritmos de combos disponibles de ganadores 
+  const combosWinw = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+  ]
   const turnos = {
     X: 'X',
     O: 'O'
   }
-
-  const updatedSquare= (inde: number)=>{
-    setTurn(!turn);
-    const newTurn =  turn ? turnos.X :turnos.O;
-    board[inde] = newTurn
-    setBoard(board);
+  const searchWinner = (boardTrack: any[])=> {
+    // buscar ganador en el algortimo de todas las combinaciones posibles 
+    for(let combo of combosWinw){
+      let [a, b, c] = combo;
+      console.log(boardTrack[a]);
+      if(
+        boardTrack[a] != false && boardTrack[a] == boardTrack[b] && boardTrack[a] == boardTrack[c]
+      ){
+        return true;
+      }
+    }
+    return false;
     
   }
+
+  const updatedSquare= (index: number)=>{
+    if(board[index] != '' || winner) return;
+
+    setTurn(!turn);
+    const newBoard = [...board];
+    const newTurn =  turn ? turnos.X :turnos.O;
+    newBoard[index] = newTurn
+    setBoard(newBoard); 
+    const newWinner = searchWinner(newBoard)
+    if(newWinner) setWinner(()=>{
+      alert('Ganaste');
+      return newWinner
+    });
+  }
+
+  // Componentes 
+  // Componente Square para ordenar la aplicacion 
   const Square = (sq: Square)=> {
     const {updatedBoard} = sq;
     const handleClick = ()=>{
       if(updatedBoard != undefined){
         updatedBoard();
-      }else{
+            }else{
         console.error(new Error('No hay funcion a la que llamar'))
       }
     }
@@ -35,6 +72,18 @@ function App() {
         <div onClick={handleClick} className={`square ${sq.isSelected ? 'is-selected' : ''}`}>
           {sq.children}
         </div>
+      </>
+    )
+  }
+  const ClearGame = ()=>{
+    const clicekd = ()=>{
+      const newBoard = [...board];
+      setBoard(newBoard.fill(''));
+      setWinner(false);
+    }
+    return (
+      <>
+        <button onClick={clicekd}>Clear Game</button>
       </>
     )
   }
@@ -62,6 +111,7 @@ function App() {
     <Square isSelected={!turn}>
       {turnos.O}
     </Square>
+    <ClearGame />
     </section>
     </main>
     </>
@@ -69,3 +119,4 @@ function App() {
 }
 
 export default App
+
