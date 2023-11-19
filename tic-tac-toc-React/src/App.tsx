@@ -1,13 +1,20 @@
 import { useState } from 'react'
-import { Square,clearGame,turns } from './types';
+import { Square,clearGame } from './types';
 import './App.css'
 
 function App() {
   // Cambiamos esta linea para usar useState y que el board sea reactivo 
   // const board = Array(9).fill(null);
-  const [board, setBoard] = useState(Array(9).fill(''));
+  const [board, setBoard] = useState(()=>{
+    console.log('iniciando desde storage');
+    const boardFromStorage = window.localStorage.getItem('board');
+    return boardFromStorage ? JSON.parse(boardFromStorage) : Array(9).fill('');
+  });
   // una variable booleana que decidira el turno actual 
-  const [turn, setTurn] = useState(false);
+  const [turn, setTurn] = useState(()=>{
+    const turnFormStorage = window.localStorage.getItem('turn');
+    return turnFormStorage ? JSON.parse(turnFormStorage) : false;
+  });
   // variable para decidir el ganador 
   const [winner, setWinner] = useState(false);
   // algoritmos de combos disponibles de ganadores 
@@ -34,7 +41,7 @@ function App() {
       let [a, b, c] = combo;
       console.log(boardTrack[a]);
       if(
-        boardTrack[a] != false && boardTrack[a] == boardTrack[b] && boardTrack[a] == boardTrack[c]
+       ( boardTrack[a] != false && boardTrack[a] == boardTrack[b] && boardTrack[a] == boardTrack[c]) || (empateCheck(boardTrack))
       ){
         return true;
       }
@@ -51,6 +58,8 @@ function App() {
     const newTurn =  turn ? turnos.X :turnos.O;
     newBoard[index] = newTurn
     setBoard(newBoard); 
+    window.localStorage.setItem('board', JSON.stringify(newBoard));
+    window.localStorage.setItem('turn', String(turn));
     const newWinner = searchWinner(newBoard)
     if(newWinner){ setWinner(()=>{
       return newWinner
@@ -87,6 +96,8 @@ function App() {
       const newBoard = [...board];
       setBoard(newBoard.fill(''));
       setWinner(false);
+      // se limpia la informacion del localStorage para la recarga 
+      window.localStorage.setItem('board', JSON.stringify(newBoard.fill('')));
     }
     return (
       <>
@@ -126,13 +137,13 @@ function App() {
           <div className="text">
             <h2>
               {
-                !winner
+                empateCheck(board)
                 ? 'Empate'
                 : 'Ganó'
               }
             </h2>
             <header className="win">
-              {winner && <Square>{!turn ? turnos.X : turnos.O}</Square>}
+              {!empateCheck(board) ? <Square>{!turn ? turnos.X : turnos.O}</Square> : <Square>=</Square>}
             </header>
 
             <footer>
