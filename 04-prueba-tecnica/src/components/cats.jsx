@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { getRandomFacT, useFact } from "./services/getRandomFact";
 import'./catStyle.css'
 export default function Cats(){
