@@ -7,7 +7,10 @@ export default function App(){
             <ul>
                 <li>Cosas por hacer</li>
             </ul>
+            <h1>App de gatitos</h1>
             <Cats />
+            <Cats />
+            <Cats /> 
         </>
     )
 }

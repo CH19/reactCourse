@@ -28,8 +28,12 @@ const catApiImages = 'https://api.thecatapi.com/v1/images/search/'
 }
 export function useFact(){
     const [newFact, setFact] = useState('Fact default');
+    const [imageCat, setImageCat] = useState('image undefined');
+
     useEffect(()=>{
         getRandomFacT().then(res => setFact(res)).catch(error => console.error(new Error(error)));
+        getCatImage().then(img => setImageCat(img));
+
     }, []);
-    return {newact}
+    return {newFact, setFact, imageCat, setImageCat}
 }
