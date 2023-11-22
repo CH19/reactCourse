@@ -1,36 +1,14 @@
 import peliculas from './movies.json'
 import { WithoutResult } from './movies';
-import { Search } from '../types/type';
 import { useMovies } from '../services/useMovies';
 import Movies from './movies';
-import {useRef, useState} from 'react';
+import { useRef} from 'react';
 
 export default function App(){
     const hasMovies = peliculas.Search.length > 0;
-    const {peliculitas: Search} = useMovies();
+    const {newPeliculas, handleSubmit, valueThing, error} = useMovies();
 // probando el useRef para hacer una referencia del dom 
-const inputRef = useRef();
-const [valueThing, setValueThing] = useState('Buscador de peliculas');
-    const newPeliculas = peliculas.Search.map((peliculas: Search) => ({
-        Title:  peliculas.Title,
-    Year:   peliculas.Year,
-    imdbID: peliculas.imdbID,
-    Type:   peliculas.Type,
-    Poster: peliculas.Poster,
-    }))
-
-    function handleSubmit(event: EventTarget){
-        // const inputEl = inputRef.current;
-        // const valueInput = inputEl.value;
-
-        // otra forma de obetener datos de un input con solo js nativo 
-        console.log(event);
-        alert()
-        const formdata = new window.FormData(event.target);
-        const inputValue  = formdata.get('peliculas');
-        setValueThing(inputValue);
-        alert(inputValue)
-    }
+    const inputRef = useRef();
     return (
         <>
          <div>
@@ -43,10 +21,16 @@ const [valueThing, setValueThing] = useState('Buscador de peliculas');
 }}>
            <h1>{valueThing}</h1>
            <form style={{
-            display: 'flex'
-           }} onSubmit={()=> handleSubmit()}>
-            <input name='peliculas' ref={inputRef} type="text" placeholder="Busca una pelicula" />
-           <input  type="submit" value={'Search'} />
+            display: 'flex',
+            position: 'relative'
+           }} >
+            <input onSubmit={(e)=> handleSubmit(e)} name='peliculas' ref={inputRef} type="text" placeholder="Busca una pelicula" />
+           {error && <h6 style={{
+            position: 'absolute',
+            top: '20px',
+            color: 'crimson'
+           }}>{error}</h6>}
+           <input type="submit" value={'send'} />
            </form>
            </header>
            <main>

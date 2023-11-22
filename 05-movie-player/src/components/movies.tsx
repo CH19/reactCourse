@@ -5,7 +5,7 @@ interface MoviesProps{
     movies: Search[],
 }
 export default function Movies(props: MoviesProps){
-    const {movies} = props
+    const { movies } = props
      return (
         <>
 
