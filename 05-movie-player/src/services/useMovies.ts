@@ -4,7 +4,7 @@ import { Search } from '../types/type';
 export function useMovies(){
     type errorType = string | null;
     const peliculitas = useRef('')
-    const [valueThing, setValueThing] = useState('Charlie');
+    const [valueThing, setValueThing] = useState('');
     const [error, setError] = useState<errorType>(null);
     const newPeliculas = peliculas.Search.map((peliculas: Search) => ({
         Title:  peliculas.Title,
@@ -45,11 +45,15 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>){
         }else if(data.match(/^\d+$/)){
             setError('no se aceptan decimales')
             return
+        }else if(data == peliculitas.current){
+            setError('estas buscando la misma pelicula');
+            return
         }else{
             setError(null )
         }
         peliculitas.current = String(data);
-        setValueThing(String(data));
+        setValueThing(peliculitas.current);
+        console.log(valueThing);
         // setValueThing(inputValue);
     }
 

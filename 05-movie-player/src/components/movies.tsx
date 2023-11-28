@@ -1,18 +1,16 @@
 import withotResult from './moviesResultnt.json';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext, useMemo, useCallback } from 'react';
 import { useMovies } from '../services/useMovies';
-interface Props {
-    busqueda: string
-}
-export default function Movies(props: Props){
+import {userContext} from './app';
+export default function Movies(){
     const { responseMovies, setResponseMovies} = useMovies();
-    const { busqueda } = props;
-    const [pelicula, setPelicula] = useState(busqueda);
-    useEffect(()=>{
-        
-        console.log(pelicula);
-        fetch(`https://www.omdbapi.com/?apikey=a3774aae&s=${pelicula}`).then(res => res.json()).then(json => setResponseMovies(json))
-    }, [pelicula]);
+    const dataContext = useContext(userContext);
+    const [pelicula, setPelicula] = useState(dataContext);
+    useMemo(()=>{
+        if(dataContext == pelicula) return;
+        setPelicula(dataContext)
+        fetch(`https://www.omdbapi.com/?apikey=a3774aae&s=${dataContext}`).then(res => res.json()).then(json => setResponseMovies(json))
+    }, [dataContext]);
      return (
         <>
         <h5>{pelicula}</h5>
@@ -37,6 +35,6 @@ export function WithoutResult(){
     return (
         <>
         <p>{withotResult.Error}</p>
-        </>
+        </> 
     )
 }

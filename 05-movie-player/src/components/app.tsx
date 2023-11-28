@@ -1,9 +1,9 @@
 import { useMovies } from '../services/useMovies';
-import Movies from './movies';
+import Movies, { WithoutResult } from './movies';
 import React from 'react';
-const userContext = React.createContext<string | null>(null);
+export const userContext = React.createContext<string>('');
 export default function App(){
-    const { handleSubmit, valueThing,error, peliculitas} = useMovies();
+    const { handleSubmit, valueThing,error} = useMovies();
 
 // probando el useRef para hacer una referencia del dom 
     return (
@@ -20,8 +20,8 @@ export default function App(){
             <form style={{
             display: 'flex',
             position: 'relative'
-            }} onSubmit={(event)=> {handleSubmit(event); console.log(peliculitas.current);}} >
-            <input name='peliculas' type="text" placeholder="Busca una pelicula" />
+            }} onSubmit={(event)=> {handleSubmit(event)}} >
+            <input required name='peliculas' type="text" placeholder="Busca una pelicula" />
             {error && <h6 style={{
             position: 'absolute',
             top: '20px',
@@ -32,7 +32,7 @@ export default function App(){
         </header>
         <main>
             <userContext.Provider value={valueThing}>
-                            <Movies busqueda={valueThing} />
+                {valueThing ? <Movies /> : <WithoutResult />}
             </userContext.Provider>
             </main>
          </div>
