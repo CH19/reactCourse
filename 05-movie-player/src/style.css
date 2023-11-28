@@ -884,3 +884,17 @@ body > footer {
     text-decoration: underline;
   }
 }
+
+.movies{
+  display: grid;
+  width: 100%;
+  max-width: 850px;
+  grid-template-columns: repeat(auto-fit, minMax(200px, 1fr));
+  gap: 1rem;
+  & > li{
+    list-style: none;
+    & img{
+      border-radius: 20px;
+    }
+  }
+}
